@@ -7,22 +7,27 @@ use App\TagParser;
 
 class TagParserTest extends TestCase 
 {
+    protected TagParser $parser;
+
+    protected function setUp(): void // setUp() adalah method yang akan dijalankan sebelum setiap test
+    {
+        $this->parser = new TagParser();
+    }
+
     public function test_parses_a_single_tag()
     {
-        $parser = new TagParser;
-
-        $result = $parser->parse('foo');
+        // Act
+        $result = $this->parser->parse('foo');
         $expected = ['foo'];
 
+        // Assert
         // $this->assertEquals($expected, $result);
         $this->assertSame($expected, $result);
     }
 
     public function test_parses_separated_list_of_tags_with_comma()
     {
-        $parser = new TagParser;
-
-        $result = $parser->parse('foo, bar,baz');
+        $result = $this->parser->parse('foo, bar,baz');
         $expected = ['foo', 'bar', 'baz'];
 
         $this->assertSame($expected, $result);
@@ -30,9 +35,7 @@ class TagParserTest extends TestCase
 
     public function test_parses_separated_list_of_tags_with_space()
     {
-        $parser = new TagParser;
-
-        $result = $parser->parse('foo bar baz');
+        $result = $this->parser->parse('foo bar baz');
         $expected = ['foo', 'bar', 'baz'];
 
         $this->assertSame($expected, $result);
@@ -40,9 +43,7 @@ class TagParserTest extends TestCase
 
     public function test_parses_separated_list_of_tags_with_pipe()
     {
-        $parser = new TagParser;
-
-        $result = $parser->parse('foo | bar | baz');
+        $result = $this->parser->parse('foo | bar | baz');
         $expected = ['foo', 'bar', 'baz'];
 
         $this->assertSame($expected, $result);
@@ -50,9 +51,7 @@ class TagParserTest extends TestCase
 
     public function test_parses_separated_list_of_tags_with_dash()
     {
-        $parser = new TagParser;
-
-        $result = $parser->parse('foo-bar-baz');
+        $result = $this->parser->parse('foo-bar-baz');
         $expected = ['foo', 'bar', 'baz'];
 
         $this->assertSame($expected, $result);
