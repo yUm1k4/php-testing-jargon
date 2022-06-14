@@ -7,53 +7,44 @@ use App\TagParser;
 
 class TagParserTest extends TestCase 
 {
-    protected TagParser $parser;
+    // protected TagParser $parser;
 
-    protected function setUp(): void // setUp() adalah method yang akan dijalankan sebelum setiap test
+    // protected function setUp(): void // setUp() adalah method yang akan dijalankan sebelum setiap test
+    // {
+    //     $this->parser = new TagParser();
+    // }
+
+    /**
+     * @dataProvider provideTags
+     */
+    public function test_it_parses_tags($input, $expected)
     {
-        $this->parser = new TagParser();
+        $parser = new TagParser();
+
+        $result = $parser->parse($input);
+
+        $this->assertSame($expected, $result); // asertSame() itu ngecek type data juga
     }
 
-    public function test_parses_a_single_tag()
+    public function provideTags()
     {
-        // Act
-        $result = $this->parser->parse('foo');
-        $expected = ['foo'];
-
-        // Assert
-        // $this->assertEquals($expected, $result);
-        $this->assertSame($expected, $result);
-    }
-
-    public function test_parses_separated_list_of_tags_with_comma()
-    {
-        $result = $this->parser->parse('foo, bar,baz');
-        $expected = ['foo', 'bar', 'baz'];
-
-        $this->assertSame($expected, $result);
-    }
-
-    public function test_parses_separated_list_of_tags_with_space()
-    {
-        $result = $this->parser->parse('foo bar baz');
-        $expected = ['foo', 'bar', 'baz'];
-
-        $this->assertSame($expected, $result);
-    }
-
-    public function test_parses_separated_list_of_tags_with_pipe()
-    {
-        $result = $this->parser->parse('foo | bar | baz');
-        $expected = ['foo', 'bar', 'baz'];
-
-        $this->assertSame($expected, $result);
-    }
-
-    public function test_parses_separated_list_of_tags_with_dash()
-    {
-        $result = $this->parser->parse('foo-bar-baz');
-        $expected = ['foo', 'bar', 'baz'];
-
-        $this->assertSame($expected, $result);
+        return [
+            ['foo', // input
+                ['foo']], // expected
+            ['foo, bar', // separator comma with space
+                ['foo', 'bar']],
+            ['foo,bar,baz', // separator comma without space
+                ['foo', 'bar', 'baz']],
+            ['foo bar baz', // separator space
+                ['foo', 'bar', 'baz']],
+            ['foo|bar|baz', // separator pipe
+                ['foo', 'bar', 'baz']],
+            ['foo-bar-baz', // separator dash
+                ['foo', 'bar', 'baz']],
+            ['foo - bar - baz', // separator dash with space
+                ['foo', 'bar', 'baz']],
+            ['foo!bar!baz', // separator exclamation 
+                ['foo', 'bar', 'baz']],
+        ];
     }
 }
